@@ -77,7 +77,8 @@ class ValidationTests(unittest.TestCase):
 
     def test_suspected_secret_is_rejected(self) -> None:
         manifest = valid_manifest()
-        manifest["limitations"].append("sk-1234567890abcdefghijklmnop")
+        synthetic_key = "sk-" + "1234567890abcdefghijklmnop"
+        manifest["limitations"].append(synthetic_key)
         self.assertIn("AAM401", codes(manifest))
 
     def test_non_http_url_evidence_is_rejected(self) -> None:
