@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: python -m pip install .
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Compile
+        run: python -m compileall -q src tests
+      - name: Validate this repository's manifest
+        run: aim validate AI_ASSISTANCE.json --check-files --root .
+      - name: Verify generated Markdown is current
+        run: |
+          aim render AI_ASSISTANCE.json --output /tmp/AI_ASSISTANCE.md --check-files --root .
+          diff -u AI_ASSISTANCE.md /tmp/AI_ASSISTANCE.md
+      - name: Build wheel
+        if: matrix.python-version == '3.12'
+        run: python -m pip wheel . --no-deps -w dist
+
