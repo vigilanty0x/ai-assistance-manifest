@@ -1,0 +1,8 @@
+{
+  "project": "sample",
+  "assistance_level": "assisted",
+  "supervision": "human-reviewed",
+  "tests_passed": 12,
+  "evidence_url": "https://example.invalid/evidence"
+}
+
