@@ -9,6 +9,7 @@ description = "A deterministic manifest format and CLI for documenting human and
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 keywords = ["ai", "provenance", "transparency", "manifest", "software-supply-chain"]
 classifiers = [
   "Development Status :: 3 - Alpha",
