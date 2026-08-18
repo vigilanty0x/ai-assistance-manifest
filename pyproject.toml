@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ai-assistance-manifest"
-version = "0.1.0"
-description = "A deterministic manifest format and CLI for documenting human and AI contributions to software projects."
+version = "0.2.0"
+description = "A portable, machine-readable disclosure format for AI-assisted software development."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -18,8 +18,10 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
   "Topic :: Software Development :: Quality Assurance",
 ]
+dependencies = []
 
 [project.scripts]
 aim = "ai_assistance_manifest.cli:main"
