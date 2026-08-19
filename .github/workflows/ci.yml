@@ -53,7 +53,7 @@ jobs:
       - name: Verify deterministic Markdown rendering
         run: |
           aim render AI_ASSISTANCE.json --output AI_ASSISTANCE.generated.md --check-files --root .
-          python -c "from pathlib import Path; expected=Path('AI_ASSISTANCE.md').read_bytes(); actual=Path('AI_ASSISTANCE.generated.md').read_bytes(); assert expected==actual, 'generated Markdown differs from committed file'"
+          python -c "from pathlib import Path; expected=Path('AI_ASSISTANCE.md').read_text(encoding='utf-8'); actual=Path('AI_ASSISTANCE.generated.md').read_text(encoding='utf-8'); assert expected==actual, 'generated Markdown content differs from committed file'"
       - name: Verify success, diagnostic, and malformed-input counter-proofs
         run: python scripts/verify_counterproof.py
       - name: Verify publication remains disabled
