@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from pathlib import Path
+from pathlib import PurePosixPath, PureWindowsPath
 from typing import Any, Iterator
 
 from .diagnostics import Diagnostic
@@ -39,12 +39,22 @@ def find_suspected_secrets(manifest: dict[str, Any]) -> list[Diagnostic]:
 
 
 def is_safe_relative_path(value: str) -> bool:
-    path = Path(value)
-    return (
-        bool(value)
-        and not path.is_absolute()
-        and re.match(r"^[A-Za-z]:[\\/]", value) is None
-        and ".." not in path.parts
-        and not value.startswith(("~", "\\"))
-        and "\x00" not in value
-    )
+    """Reject absolute/traversal paths using POSIX and Windows semantics.
+
+    Manifest paths are portable data, so their safety cannot depend on the OS
+    that happens to validate the file.  A POSIX absolute path must therefore be
+    rejected on Windows, and a Windows drive/UNC path must be rejected on POSIX.
+    Backslashes are also treated as path separators for traversal checks.
+    """
+
+    if not value or "\x00" in value or value.startswith("~"):
+        return False
+
+    posix = PurePosixPath(value.replace("\\", "/"))
+    windows = PureWindowsPath(value)
+
+    if posix.is_absolute() or windows.is_absolute() or bool(windows.drive):
+        return False
+    if ".." in posix.parts or ".." in windows.parts:
+        return False
+    return True
